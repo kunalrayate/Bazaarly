@@ -1,0 +1,22 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1, "newProjectRoot": "projects",
+  "projects": { "bazaarly": {
+    "projectType": "application", "root": "", "sourceRoot": "src", "prefix": "app",
+    "architect": {
+      "build": { "builder": "@angular-devkit/build-angular:application",
+        "options": { "outputPath": "dist/bazaarly", "index": "src/index.html", "browser": "src/main.ts", "polyfills": ["zone.js"], "tsConfig": "tsconfig.app.json",
+          "assets": ["src/favicon.svg"], "styles": ["src/styles.css"] },
+        "configurations": {
+          "production": { "budgets": [{ "type": "initial", "maximumWarning": "1mb", "maximumError": "2mb" }, { "type": "anyComponentStyle", "maximumWarning": "20kb", "maximumError": "40kb" }], "outputHashing": "all" },
+          "development": { "optimization": false, "extractLicenses": false, "sourceMap": true } },
+        "defaultConfiguration": "production" },
+      "serve": { "builder": "@angular-devkit/build-angular:dev-server",
+        "configurations": { "production": { "buildTarget": "bazaarly:build:production" }, "development": { "buildTarget": "bazaarly:build:development" } }, "defaultConfiguration": "development" }
+    }
+  }
+},
+"cli": {
+  "analytics": "3009deb4-6fd3-4091-bb04-bbff8424f1df"
+}
+}

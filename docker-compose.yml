@@ -1,0 +1,8 @@
+# Optional: run MySQL without installing it.  docker compose up -d
+services:
+  mysql:
+    image: mysql:8.0
+    environment: { MYSQL_ROOT_PASSWORD: root, MYSQL_DATABASE: bazaarly }
+    ports: ["3306:3306"]
+    volumes: [bazaarly-data:/var/lib/mysql]
+volumes: { bazaarly-data: {} }
