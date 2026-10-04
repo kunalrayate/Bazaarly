@@ -1,94 +1,147 @@
-# Bazaarly - Full-stack E-commerce Platform
+# 🛒 Bazaarly - Full-Stack E-Commerce Platform
 
-Java 17 · Spring Boot 3.2 · Spring Security (JWT) · Hibernate/JPA · MySQL 8 · Angular 17
+> A modern, multi-vendor online marketplace inspired by platforms like Amazon, built with **Java, Spring Boot, Hibernate/JPA, MySQL and Angular**.
 
-An original Amazon-style marketplace with **three roles** (Customer, Seller, Admin), full shopping flow
-(discover → product → cart → coupon → checkout → test payment → order tracking), inventory, reviews,
-recommendations and analytics dashboards.
+Bazaarly delivers a complete shopping experience: customers discover products, add them to a cart, pay, and track orders. Sellers run their own store dashboards, and administrators control the whole platform.
 
-## Run it
+![Java](https://img.shields.io/badge/Java-17-orange) ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2-brightgreen) ![MySQL](https://img.shields.io/badge/MySQL-8-blue) ![Angular](https://img.shields.io/badge/Angular-17-red) ![JWT](https://img.shields.io/badge/Auth-JWT-purple)
 
-**1. Database** - MySQL 8 on localhost:3306 (user `root` / password `root`), or `docker compose up -d`.
-The `bazaarly` database and all tables are created automatically.
-Different credentials? `export DB_USER=... DB_PASSWORD=...` (or edit `backend/src/main/resources/application.properties`).
+---
+## 📖 Overview
+I built Bazaarly, a full-stack, multi-vendor e-commerce platform inspired by marketplaces like Amazon, to practice designing and building a real-world system instead of a simple CRUD app. E-commerce brings together many of the problems that production software has to solve: multiple user roles, secure authentication, payments, inventory, search, discounts and order workflows. The application supports three roles. Customers can browse, search, filter, order, pay and track deliveries. Sellers manage their own products, stock and orders. Administrators approve sellers, manage the catalog and coupons, and monitor sales analytics. I chose this project because it let me work on both the technical side (secure APIs, database design, concurrency) and the business side (order lifecycle, returns and refunds, coupon rules) in one application.
 
-**2. Backend** (needs JDK 17+ and Maven)
+## 📄 What I learned
+
+Building Bazaarly strengthened my skills across the full stack. On the backend, I designed layered REST APIs with Spring Boot, implemented JWT authentication with role-based authorization, and handled validation and exception handling. With Hibernate/JPA and MySQL, I modelled complex relationships, wrote dynamic search and filter queries with pagination, and used transactions and locking so stock is never oversold. I built a coupon engine, an order state machine, a scheduled job that ends expired deals, and a pluggable payment gateway that can be switched from a test gateway to Razorpay. On the frontend, I built an Angular single-page application using lazy-loaded routes, route guards, HTTP interceptors and role-based dashboards. I also practiced debugging real issues such as database connection errors and CORS problems, and learned to structure a large project cleanly and document it for other developers.
+
+## ✨ Features and Operations 
+
+1. Customer Operations :
+	Customers can register and log in, browse products by category, search by keyword, filter by price, brand, rating and availability, and sort by price, rating, popularity or newest arrivals.
+2. Cart, Wishlist and Coupons :
+	Customers can add products (with variants such as size, color or storage) to the cart, change quantities, save items to the wishlist and apply discount coupons.
+3. Checkout and Payment :
+	Customers can manage multiple delivery addresses, place orders and pay online (test payment, Razorpay-ready) or use Cash on Delivery.
+4. Order Tracking :
+	Every order moves through the stages Order Placed, Confirmed, Processing, Shipped, Out for Delivery and Delivered. Customers can cancel eligible orders and request returns or refunds.
+5. Reviews and Ratings :
+	Customers who received a product can rate and review it. The product page shows the average rating, number of reviews and rating distribution.
+6. Seller Operations :
+	Sellers register their store (admin approval required), add and manage products with images and variants, set prices and discounts, update stock, process orders and view sales and revenue reports.
+7. Admin Operations :
+	Admins approve or reject sellers, manage customers, categories, products, orders, coupons and reported reviews, and view platform-wide statistics such as revenue, popular products and categories.
+8. Inventory Management :
+	Stock is automatically reduced when an order is placed and restored when an order is cancelled or returned. Products with low stock are highlighted for sellers and admins.
+9. Personalized Recommendations :
+	Product suggestions are based on recently viewed products, previous purchases, wishlist, category and frequently bought together items.
+
+
+## Attributes
+Each product record consists of the following attributes:
+- **id**: Product ID (Unique Identifier)
+- **name**: Product name
+- **description**: Detailed product description
+- **brand**: Brand name
+- **category**: Product category (Electronics, Fashion, Grocery, Books, Furniture, etc.)
+- **price**: Maximum retail price (MRP)
+- **discountPercent**: Discount percentage
+- **sellingPrice**: Final price after discount
+- **stock**: Available quantity
+- **images**: List of product images
+- **specifications**: Key-value product specifications
+- **variants**: Options such as size, color, storage with optional price add-ons
+- **ratingAvg / ratingCount**: Average rating and number of reviews
+
+Other main entities: **User** (Customer, Seller, Admin), **Address**, **CartItem**, **WishlistItem**, **Order**, **OrderItem**, **Coupon**, **Review**, **Notification**.
+
+
+## 🧰 Technologies Used
+
+- **Spring Boot** : Core framework used to build the REST API with the Model-View-Controller pattern. Handles request mapping, validation and exception handling.
+- **Spring Security + JWT** : Stateless authentication and role-based authorization for the Customer, Seller and Admin roles. Passwords are stored using BCrypt.
+- **Hibernate / Spring Data JPA** : Object-relational mapping used to perform CRUD operations, complex queries and dynamic search filters on the database.
+- **MySQL** : Relational database used to store users, products, orders, coupons, reviews and notifications.
+- **Angular** : Frontend single-page application (standalone components, lazy-loaded routes, route guards and HTTP interceptors) written in TypeScript.
+- **HTML & CSS** : Used to create a responsive and visually appealing user interface.
+- **Maven** : Build and dependency management tool for the backend.
+- **Node.js & npm** : Used to install dependencies and run the Angular application.
+- **Apache Tomcat (embedded)** : The embedded servlet container that runs the Spring Boot application.
+- **Docker (optional)** : Used to run the MySQL database with a single command.
+
+
+## To run this project on your system, follow these steps 
+
+ 1. Prerequisites :
+  - JDK 17 or later
+  - Maven 3.8 or later
+  - MySQL 8 (or Docker Desktop)
+  - Node.js 18 or later
+
+ 2. Clone the repository :
+  - git clone https://github.com/kunalrayate/bazaarly.git
+  - cd bazaarly
+
+ 3. Start the database :
+  - Install MySQL and keep the username as root and password as root, or run: docker compose up -d
+  - The database named bazaarly and all tables are created automatically on the first run.
+  - To use a different password, set the DB_PASSWORD environment variable or edit backend/src/main/resources/application.properties.
+
+ 4. Run the backend :
+  - cd backend
+  - mvn spring-boot:run
+  - The API starts on http://localhost:8080 and demo data is added automatically.
+
+ 5. Run the frontend :
+  - cd frontend
+  - npm install
+  - npm start
+  - The application opens on http://localhost:4200
+
+
+## 🏗️ Project Structure
+
 ```
-cd backend
-mvn spring-boot:run          # http://localhost:8080
-```
-On first start demo data is seeded (24 products, categories, coupons, demo orders/reviews).
-Turn this off with `app.seed-demo-data=false`.
-
-**3. Frontend** (needs Node 18+)
-```
-cd frontend
-npm install
-npm start                    # http://localhost:4200
-```
-API URL is in `frontend/src/environments/environment.ts`.
-
-## Demo accounts
-| Role | Email | Password |
-|---|---|---|
-| Customer | customer@bazaarly.com | Customer@123 |
-| Seller | seller@bazaarly.com | Seller@123 |
-| Seller (2nd store) | books@bazaarly.com | Seller@123 |
-| Seller (pending approval) | newseller@bazaarly.com | Seller@123 |
-| Admin | admin@bazaarly.com | Admin@123 |
-
-Coupons to try: `WELCOME10`, `FLAT200`, `BOOKLOVER15` (books only), `FESTIVE25` (electronics only).
-
-Try this flow: log in as customer → search/filter → open the Nimbus X5 phone → pick color/storage → add to cart →
-apply `WELCOME10` → checkout → "Pay now (success)". Then log in as seller → Orders → move it
-Confirmed → Processing → Shipped → Out for delivery → Delivered. Back as customer you can now review the product
-and request a return.
-
-## Feature map
-**Customer** - register/login, category browse, keyword search, filters (price, brand, category, rating, availability), sorting
-(price/rating/popularity/newest), gallery, variants, cart with quantity, wishlist, coupons, multiple addresses, checkout,
-test payment (retry on failure), order history, 6-step tracking, cancel, return/refund, verified-purchase reviews with
-rating distribution, report review, profile, notifications, recently viewed, recommendations.
-
-**Seller** - store registration (needs admin approval), product CRUD with image upload, variants + price add-ons,
-discounts & limited-time deals, inline stock editing, low-stock alerts, incoming orders, status updates,
-return decisions, revenue / best sellers / sales trend / order stats.
-
-**Admin** - dashboard (revenue, orders, customers, sellers, trends, popular products & categories), customers & sellers
-(approve / reject / block), categories, product listings (feature / unlist), all orders, coupons & offers
-(percentage, fixed, category/product scoped, min purchase, cap, usage limit, start/expiry), reported reviews, low-stock inventory.
-
-**Rules implemented** - stock is locked (pessimistic lock) and deducted at order time, restored on cancel/return;
-expired deals are switched off by a scheduler; free delivery above ₹500; return window 7 days;
-online orders can't be confirmed until paid; refunds mark payment `REFUNDED`.
-
-## Project layout
-```
-backend/src/main/java/com/bazaarly
-  config/   security + JWT, exception handling, demo data seeder
-  entity/   JPA entities      repo/  Spring Data repositories
-  service/  pricing & coupons, orders & inventory, recommendations, stats, reviews
-  payment/  PaymentGateway interface + MockPaymentGateway
-  web/      REST controllers (auth, catalog, cart, orders, seller, admin, ...)
-frontend/src/app
-  core/ api, auth, interceptor + guards     shared/ cards, stars, charts
-  pages/ home, products, product-detail, cart, checkout, orders, order-detail, account, seller, admin
+bazaarly
+├── backend (Spring Boot)
+│   └── src/main/java/com/bazaarly
+│       ├── config    -> Security, JWT, CORS, exception handling, demo data
+│       ├── entity    -> JPA entities
+│       ├── repo      -> Spring Data repositories
+│       ├── service   -> Business logic (orders, pricing, coupons, stats)
+│       ├── payment   -> Payment gateway interface and test gateway
+│       └── web       -> REST controllers
+└── frontend (Angular)
+    └── src/app
+        ├── core      -> API service, auth service, interceptor, guards
+        ├── shared    -> Reusable components
+        └── pages     -> Home, products, cart, checkout, orders, seller, admin
 ```
 
-## Switching to Razorpay
-The whole payment flow goes through `payment/PaymentGateway.java` (create → verify → refund).
-1. Add the `com.razorpay:razorpay-java` dependency to `pom.xml`.
-2. Create `RazorpayPaymentGateway implements PaymentGateway` annotated `@Service`, and remove `@Service` from `MockPaymentGateway`:
-   - `createPayment` → create a Razorpay Order (amount in paise) and return `{key, razorpayOrderId, amount, currency, paymentRef}`.
-   - `verify` → validate `razorpay_signature` of `razorpay_order_id|razorpay_payment_id` with your key secret (`Utils.verifyPaymentSignature`).
-   - `refund` → `client.payments.refund(paymentId, ...)`.
-3. Frontend: load `https://checkout.razorpay.com/v1/checkout.js` and, in `checkout.ts` / `order-detail.ts`,
-   replace the test modal with `new Razorpay({ key, order_id, handler: res => post('/payments/{id}/confirm', res) })`.
-   The `/api/payments/{orderId}/initiate` and `/confirm` endpoints stay the same.
-Keep keys in environment variables, never in git.
 
-## Notes / next steps
-- Passwords are BCrypt-hashed; JWT lifetime 24h. Change `app.jwt.secret` before deploying.
-- Orders with items from several sellers share one order status (kept simple on purpose). Per-seller sub-orders are the natural next step.
-- Product images from the seed use picsum.photos (needs internet). Uploaded images are stored in `backend/uploads`.
-- Production hardening to consider: Flyway migrations instead of `ddl-auto=update`, Redis cache, Elasticsearch for search, rate limiting, tests.
+## Backend Dependencies (Spring Initializr)
+
+ - Spring Web : For building REST APIs and handling HTTP requests.
+ - Spring Security : For authentication and role-based access control.
+ - Spring Data JPA : For database access using Hibernate.
+ - Validation : For validating request data.
+ - MySQL Driver : MySQL Connector to connect the application with the MySQL database.
+ - Lombok : To reduce boilerplate code in entity classes.
+ - JJWT : For creating and validating JSON Web Tokens.
+
+
+## Future Enhancements
+
+ - Razorpay payment gateway integration
+ - Email and SMS notifications
+ - Separate sub-orders for products from multiple sellers
+ - Unit and integration tests
+
+
+## 👨‍💻 Author
+
+For any inquiries, questions, or feedback related to this project, feel free to reach out to me:
+
+- GitHub :  (https://github.com/kunalrayate)
+- Email :  (kunalrayate126@gmail.com)
+
+
